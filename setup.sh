@@ -1,14 +1,16 @@
 #!/bin/bash
-
+# project specific tasks
 export BUILD_PATH=/tmp/build
 export RESULT_PATH=/tmp/build
 export ANT_HOME=${UCS8}/tools/ant/
 
 export PATH=${ANT_HOME}/bin:$PATH
 
+# find current directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 : ${UCS8:="${DIR}]"}
 
+# check which OS we are running, to set correctly java home (only for mac for now)
 # https://stackoverflow.com/questions/3466166/how-to-check-if-running-in-cygwin-mac-or-linux
 case "$OSTYPE" in
   linux*)   echo "Linux / WSL" ;;
@@ -57,8 +59,6 @@ stopdb () {
   sleep 5
   popd
 }
-# EXPORT CLASSPATH=%ICCVIEW%\tools\junit\junit.jar;%ICCVIEW%\tools\antlr\antlr-compile.jar
 
-#export ANT_ARGS="-logger org.apache.tools.ant.NoBannerLogger"
-#export ANT_OPTS="${ANT_OPTS} -Dresult.path=${BUILD_PATH} -Droot.path=${UCS8}"
+# this launch gradle daemon (so next call will use already started instance) and display tasks
 ${UCS8}/gradlew tasks
