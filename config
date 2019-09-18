@@ -1,0 +1,22 @@
+Host slave1
+        User user1
+        Hostname myslave1
+Host slave2
+        User user2
+        Hostname myslave2
+Host slave3
+        User user
+        Hostname myslave3
+Host registry 
+        User root
+        Hostname bsregistrydocker
+
+Host cloudcustom
+        User xxx
+        Hostname xx.xx.xx.xx
+        IdentityFile ~/keys/x.pem
+
+Host esrvp
+        User xxx
+        Hostname xx
+        IdentityFile ~/keys/x.pem
