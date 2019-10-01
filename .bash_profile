@@ -87,6 +87,6 @@ cloudssh () {
 }
 
 cloudssh-esrvp () {
- cloudssh usw1esv-21-03-001.usw1.genhtcc.com
+ cloudssh hostname-region.example.com
 }
 export PATH=$PATH:.
