@@ -32,7 +32,7 @@ esac
 printf "appending to ${HOME}/${BASHFILE} \n"
 if [  -f ${HOME}/${BASHFILE} ]; then
     cat <<\EOF >> ${HOME}/${BASHFILE}
------ sample below -----
+###### sample below ######
 EOF
     cat .bash_profile >> ${HOME}/${BASHFILE}
 else
@@ -42,7 +42,7 @@ fi
 printf "appending to .ssh/config \n"
 if [  -f ${HOME}/".ssh/config" ]; then
     cat <<\EOF >> ${HOME}/".ssh/config"
------ sample below -----
+###### sample below ######
 EOF
     cat config >> ${HOME}/".ssh/config"
 else
