@@ -7,6 +7,8 @@ alias ps="ps -axf"
 alias psg="ps -ax | grep -v grep | grep -i -e VSZ -e"
 alias mkdir="mkdir -pv"
 alias wget="wget -c"
+alias ping='ping -c 5'
+alias dockerps="docker ps --format '{{.ID}} ~ {{.Names}} ~ {{.Status}} ~ {{.Image}}'"
 
 #load ssh keys
 if [ -d $HOME/keys ]
@@ -89,4 +91,20 @@ cloudssh () {
 cloudssh-esrvp () {
  cloudssh hostname-region.example.com
 }
+
+## docker
+
+dockersh() {
+  docker exec -it $1 /bin/sh
+}
+
+dockerprune() {
+  docker system prune -af
+}
+
+dockerclean() {
+  docker rm $(docker ps --all -q -f status=exited)
+  docker volume rm $(docker volume ls -qf dangling=true)
+}
+
 export PATH=$PATH:.
