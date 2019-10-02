@@ -92,6 +92,16 @@ cloudssh-esrvp () {
  cloudssh hostname-region.example.com
 }
 
+# create compressed file tar.gz from arguments
+targz() {
+tar -zcvf $1.tar.gz $*
+}
+
+# extract provided argument
+untargz() {
+tar -zxvf $1
+}
+
 ## docker
 
 dockersh() {
