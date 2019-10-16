@@ -40,6 +40,9 @@ export CI=${VCS_ROOT}/brest_ci
 export DEV_OPS=${VCS_ROOT}/devops_aws
 export GENESYS_DOCKER_ROOT=/vagrant/ucs/ucs-tng/devops
 
+export GIT_USER_PERSO="gartcimore"
+export GIT_MAIL_PERSO="gart.algar@gmail.com"
+
 depot () {
     cd ${VCS_ROOT}
     [[ ! -z "$1" ]] && cd $1
@@ -61,6 +64,12 @@ ucs8f () {
 }
 ci () {
  cd ${CI}
+}
+
+
+gitconfig () {
+ git config user.email $GIT_MAIL_PERSO;
+ git config user.name $GIT_USER_PERSO;
 }
 
 build () {
