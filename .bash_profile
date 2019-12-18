@@ -29,6 +29,10 @@ export NVM_DIR="$HOME/.nvm"
 export LESS="-FRXI"
 export PAGER="less"
 
+# for maven signing using GPG to work on Macos
+GPG_TTY=$(tty)
+export GPG_TTY
+
 export CLICOLOR=1
 export BUILD_PATH=/tmp/build
 export RESULT_PATH=/tmp/build
