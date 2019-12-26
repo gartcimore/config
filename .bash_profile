@@ -47,6 +47,10 @@ export GENESYS_DOCKER_ROOT=/vagrant/ucs/ucs-tng/devops
 export GIT_USER_PERSO="gartcimore"
 export GIT_MAIL_PERSO="gart.algar@gmail.com"
 
+# if you have jenv (for java version switching)
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
+
 depot () {
     cd ${VCS_ROOT}
     [[ ! -z "$1" ]] && cd $1
