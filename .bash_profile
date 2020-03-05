@@ -154,4 +154,4 @@ dockerclean() {
   docker volume rm $(docker volume ls -qf dangling=true)
 }
 
-export PATH=$PATH:.
+export PATH=/usr/local/bin:/usr/local/sbin:$PATH
