@@ -1,0 +1,2 @@
+//server_ip_or_name/share /mnt/data/ cifs vers=3.0,nofail,auto,rw,iocharset=utf8,credentials=/home/data_cred,nodev,nosuid,uid=1000,gid=1000,dir_mode=0770,file_mode=0770,x-systemd.automount,x-systemd.mount-timeout=5 0 0 
+//server_ip_or_name/share2 /mnt/data2/ cifs vers=3.0,nofail,auto,rw,iocharset=utf8,credentials=/home/data_cred,nodev,nosuid,uid=1000,gid=1000,dir_mode=0770,file_mode=0770,x-systemd.automount,x-systemd.mount-timeout=5 0 0
