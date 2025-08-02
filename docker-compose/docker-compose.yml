@@ -145,14 +145,12 @@ services:
   gluetun:
     image: qmcgaw/gluetun:v3
     container_name: gluetun
-    ports:
-      - 8080:8080 #qbittorrent
-      - 6881:6881 #qbittorrent
-      - 6881:6881/udp #qbittorrent
     cap_add:
       - NET_ADMIN
     devices:
       - /dev/net/tun:/dev/net/tun
+    ports:
+      - 8080:8080/tcp # qbittorrent
     environment:
       - TZ=${TZ}
       - UPDATER_PERIOD=24h
@@ -186,9 +184,8 @@ services:
       - PGID=1000
       - TZ=${TZ}
       - WEBUI_PORT=8080
-      - TORRENTING_PORT=6881
     volumes:
       - ${DOCKER_CONFIG_DIR}/qbittorent:/config
-      - /mnt/dataYmir/:/data #optional
+      - /mnt/dataYmir/downloads:/downloads #optional
     restart: unless-stopped
     network_mode: "service:gluetun"
