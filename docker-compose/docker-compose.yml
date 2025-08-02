@@ -11,7 +11,7 @@ services:
       - PGID=1000
       - TZ=${TZ}
     volumes:
-      - /docker/appdata/prowlarr/data:/config
+      - ${DOCKER_CONFIG_DIR}/prowlarr/data:/config
     ports:
       - 9696:9696
     restart: unless-stopped
@@ -27,7 +27,7 @@ services:
       - PGID=1000
       - TZ=${TZ}
     volumes:
-      - /docker/appdata/radarr:/config
+      - ${DOCKER_CONFIG_DIR}/radarr:/config
       - /mnt/dataYmir/:/data 
     ports:
       - 7878:7878
@@ -44,7 +44,7 @@ services:
       - PGID=1000
       - TZ=${TZ}
     volumes:
-      - /docker/appdata/sonarr:/config
+      - ${DOCKER_CONFIG_DIR}/sonarr:/config
       - /mnt/dataYmir/:/data
       - /mnt/data/:/dataDrogo
     ports:
@@ -62,7 +62,7 @@ services:
       - PGID=1000
       - TZ=${TZ}
     volumes:
-      - /docker/appdata/bazarr:/config
+      - ${DOCKER_CONFIG_DIR}/bazarr:/config
       - /mnt/dataYmir/:/data
     ports:
       - 6767:6767
@@ -81,7 +81,7 @@ services:
       - TZ=${TZ}
       - JELLYFIN_PublishedServerUrl=http://192.168.0.20 #optional
     volumes:
-      - /docker/appdata/jellyfin:/config
+      - ${DOCKER_CONFIG_DIR}/jellyfin:/config
       - /mnt/dataYmir/media:/mediaYmir
       - /mnt/data/media:/mediaDrogo
     ports:
@@ -101,7 +101,7 @@ services:
       - LOG_LEVEL=debug
       - TZ=${TZ}
     volumes:
-      - /docker/appdata/jellyseer:/app/config
+      - ${DOCKER_CONFIG_DIR}/jellyseer:/app/config
     ports:
       - 5055:5055
     restart: unless-stopped
@@ -116,7 +116,7 @@ services:
         - SECRET_ENCRYPTION_KEY=83844736d94ee288f4ec20f0b2bb82dd83a6edb8bd45602c85de49d2869d85d9
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
-        - /docker/appdata/homarr:/appdata
+        - ${DOCKER_CONFIG_DIR}/homarr:/appdata
       ports:
         - '7575:7575'
       restart: unless-stopped
@@ -150,6 +150,9 @@ services:
       - VPN_PORT_FORWARDING=on
       - VPN_PORT_FORWARDING_UP_COMMAND=/bin/sh -c 'wget -O- --retry-connrefused --post-data "json={\"listen_port\":{{PORTS}}}" http://127.0.0.1:8080/api/v2/app/setPreferences 2>&1'
       - SERVER_COUNTRIES=${SERVER_COUNTRIES}
+    volumes:
+      - ${DOCKER_CONFIG_DIR}/gluetun:/gluetun
+    restart: unless-stopped
 
 
 ############################
@@ -168,7 +171,7 @@ services:
       - WEBUI_PORT=8080
       - TORRENTING_PORT=6881
     volumes:
-      - /docker/appdata/qbittorent:/config
+      - ${DOCKER_CONFIG_DIR}/qbittorent:/config
       - /mnt/dataYmir/:/data #optional
     restart: unless-stopped
     network_mode: "service:gluetun"
