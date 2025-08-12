@@ -1,6 +1,47 @@
 services:
 
 ############################
+# DOCKER SOCKET PROXY
+############################
+  socket-proxy:
+    image: tecnativa/docker-socket-proxy:latest
+    container_name: socket-proxy
+    environment:
+      - CONTAINERS=1
+      - SERVICES=1
+      - NETWORKS=1
+      - POST=0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - socket_proxy
+    restart: unless-stopped
+
+############################
+# TRAEFIK
+############################
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik
+    command:
+      - --api.dashboard=true
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.endpoint=tcp://socket-proxy:2375
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=traefik
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8081:8080"
+    networks:
+      - traefik
+      - socket_proxy
+    restart: unless-stopped
+
+############################
 # PROWLARR
 ############################
   prowlarr:
@@ -31,6 +72,19 @@ services:
       - /mnt/dataYmir/:/data 
     ports:
       - 7878:7878
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.rule=Host(`${HOSTNAME}`) && PathPrefix(`/radarr`)"
+      - "traefik.http.routers.radarr.entrypoints=web"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+      - "traefik.http.middlewares.radarr-stripprefix.stripprefix.prefixes=/radarr"
+      - "traefik.http.middlewares.radarr-headers.headers.customrequestheaders.X-Forwarded-Proto=http"
+      - "traefik.http.middlewares.radarr-headers.headers.customrequestheaders.X-Forwarded-Host=${HOSTNAME}"
+      # - "traefik.http.middlewares.radarr-headers.headers.customrequestheaders.X-Forwarded-For=127.0.0.1"
+      - "traefik.http.middlewares.radarr-headers.headers.customrequestheaders.X-Forwarded-Prefix=/radarr"
+      - "traefik.http.routers.radarr.middlewares=radarr-headers,radarr-stripprefix"
     restart: unless-stopped
 
 ############################
@@ -96,7 +150,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${TZ}
-      - JELLYFIN_PublishedServerUrl=http://192.168.0.20 #optional
+      - JELLYFIN_PublishedServerUrl=http://${HOSTNAME}/jellyfin
     volumes:
       - ${DOCKER_CONFIG_DIR}/jellyfin:/config
       - /mnt/dataYmir/media:/mediaYmir
@@ -106,6 +160,19 @@ services:
       - 8920:8920 #optional
       - 7359:7359/udp #optional
       - 1900:1900/udp #optional
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.rule=Host(`${HOSTNAME}`) && (PathPrefix(`/jellyfin`))"
+      - "traefik.http.routers.jellyfin.entrypoints=web"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+      - "traefik.http.middlewares.jellyfin-stripprefix.stripprefix.prefixes=/jellyfin"
+      - "traefik.http.middlewares.jellyfin-headers.headers.customrequestheaders.X-Forwarded-Proto=http"
+      - "traefik.http.middlewares.jellyfin-headers.headers.customrequestheaders.X-Forwarded-Host=${HOSTNAME}"
+      # - "traefik.http.middlewares.jellyfin-headers.headers.customrequestheaders.X-Forwarded-For=127.0.0.1"
+      - "traefik.http.middlewares.jellyfin-headers.headers.customrequestheaders.X-Forwarded-Prefix=/jellyfin"
+      - "traefik.http.routers.jellyfin.middlewares=jellyfin-headers,jellyfin-stripprefix"
     restart: unless-stopped
 
 ############################
@@ -136,6 +203,19 @@ services:
         - ${DOCKER_CONFIG_DIR}/homarr:/appdata
       ports:
         - '7575:7575'
+      networks:
+        - traefik
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.homarr.rule=Host(`${HOSTNAME}`) && PathPrefix(`/homarr`)"
+        - "traefik.http.routers.homarr.entrypoints=web"
+        - "traefik.http.services.homarr.loadbalancer.server.port=7575"
+        - "traefik.http.middlewares.homarr-stripprefix.stripprefix.prefixes=/homarr"
+        - "traefik.http.middlewares.homarr-headers.headers.customrequestheaders.X-Forwarded-Proto=http"
+        - "traefik.http.middlewares.homarr-headers.headers.customrequestheaders.X-Forwarded-Host=${HOSTNAME}"
+        - "traefik.http.middlewares.homarr-headers.headers.customrequestheaders.X-Forwarded-For=127.0.0.1"
+        - "traefik.http.middlewares.homarr-headers.headers.customrequestheaders.X-Forwarded-Prefix=/homarr"
+        - "traefik.http.routers.homarr.middlewares=homarr-headers,homarr-stripprefix"
       restart: unless-stopped
 
 ############################
@@ -167,6 +247,15 @@ services:
       - SERVER_COUNTRIES=${SERVER_COUNTRIES}
     volumes:
       - ${DOCKER_CONFIG_DIR}/gluetun:/gluetun
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent.rule=Host(`${HOSTNAME}`) && PathPrefix(`/qbittorrent`)"
+      - "traefik.http.routers.qbittorrent.entrypoints=web"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.qbittorrent-stripprefix.stripprefix.prefixes=/qbittorrent"
+      - "traefik.http.routers.qbittorrent.middlewares=qbittorrent-stripprefix"
     restart: unless-stopped
 
 
@@ -186,6 +275,18 @@ services:
       - WEBUI_PORT=8080
     volumes:
       - ${DOCKER_CONFIG_DIR}/qbittorent:/config
-      - /mnt/dataYmir/downloads:/downloads #optional
+      - ${MEDIA_DIR}/downloads:/downloads
     restart: unless-stopped
     network_mode: "service:gluetun"
+
+############################
+# NETWORKS
+############################
+networks:
+  traefik:
+    driver: bridge
+    external: false
+  socket_proxy:
+    driver: bridge
+    internal: true
+    external: false
