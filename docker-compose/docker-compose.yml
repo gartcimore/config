@@ -257,7 +257,7 @@ services:
       image: ghcr.io/homarr-labs/homarr:latest
       container_name: homarr
       environment:
-        - SECRET_ENCRYPTION_KEY=83844736d94ee288f4ec20f0b2bb82dd83a6edb8bd45602c85de49d2869d85d9
+        - SECRET_ENCRYPTION_KEY=${HOMARR_SECRET_KEY}
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
         - ${DOCKER_CONFIG_DIR}/homarr:/appdata
