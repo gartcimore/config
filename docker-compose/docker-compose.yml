@@ -55,6 +55,18 @@ services:
       - ${DOCKER_CONFIG_DIR}/prowlarr/data:/config
     ports:
       - 9696:9696
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prowlarr.rule=Host(`${HOSTNAME}`) && PathPrefix(`/prowlarr`)"
+      - "traefik.http.routers.prowlarr.entrypoints=web"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+      - "traefik.http.middlewares.prowlarr-stripprefix.stripprefix.prefixes=/prowlarr"
+      - "traefik.http.middlewares.prowlarr-headers.headers.customrequestheaders.X-Forwarded-Proto=http"
+      - "traefik.http.middlewares.prowlarr-headers.headers.customrequestheaders.X-Forwarded-Host=${HOSTNAME}"
+      - "traefik.http.middlewares.prowlarr-headers.headers.customrequestheaders.X-Forwarded-Prefix=/prowlarr"
+      - "traefik.http.routers.prowlarr.middlewares=prowlarr-headers,prowlarr-stripprefix"
     restart: unless-stopped
 
 ############################
@@ -103,6 +115,18 @@ services:
       - /mnt/data/:/dataDrogo
     ports:
       - 8989:8989
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.rule=Host(`${HOSTNAME}`) && PathPrefix(`/sonarr`)"
+      - "traefik.http.routers.sonarr.entrypoints=web"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+      - "traefik.http.middlewares.sonarr-stripprefix.stripprefix.prefixes=/sonarr"
+      - "traefik.http.middlewares.sonarr-headers.headers.customrequestheaders.X-Forwarded-Proto=http"
+      - "traefik.http.middlewares.sonarr-headers.headers.customrequestheaders.X-Forwarded-Host=${HOSTNAME}"
+      - "traefik.http.middlewares.sonarr-headers.headers.customrequestheaders.X-Forwarded-Prefix=/sonarr"
+      - "traefik.http.routers.sonarr.middlewares=sonarr-headers,sonarr-stripprefix"
     restart: unless-stopped
 
 ############################
@@ -120,6 +144,18 @@ services:
       - /mnt/dataYmir/:/data
     ports:
       - 6767:6767
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bazarr.rule=Host(`${HOSTNAME}`) && PathPrefix(`/bazarr`)"
+      - "traefik.http.routers.bazarr.entrypoints=web"
+      - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
+      - "traefik.http.middlewares.bazarr-stripprefix.stripprefix.prefixes=/bazarr"
+      - "traefik.http.middlewares.bazarr-headers.headers.customrequestheaders.X-Forwarded-Proto=http"
+      - "traefik.http.middlewares.bazarr-headers.headers.customrequestheaders.X-Forwarded-Host=${HOSTNAME}"
+      - "traefik.http.middlewares.bazarr-headers.headers.customrequestheaders.X-Forwarded-Prefix=/bazarr"
+      - "traefik.http.routers.bazarr.middlewares=bazarr-headers,bazarr-stripprefix"
     restart: unless-stopped
 
 ############################
@@ -137,6 +173,18 @@ services:
       - /mnt/dataYmir/:/data 
     ports:
       - 8686:8686
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.lidarr.rule=Host(`${HOSTNAME}`) && PathPrefix(`/lidarr`)"
+      - "traefik.http.routers.lidarr.entrypoints=web"
+      - "traefik.http.services.lidarr.loadbalancer.server.port=8686"
+      - "traefik.http.middlewares.lidarr-stripprefix.stripprefix.prefixes=/lidarr"
+      - "traefik.http.middlewares.lidarr-headers.headers.customrequestheaders.X-Forwarded-Proto=http"
+      - "traefik.http.middlewares.lidarr-headers.headers.customrequestheaders.X-Forwarded-Host=${HOSTNAME}"
+      - "traefik.http.middlewares.lidarr-headers.headers.customrequestheaders.X-Forwarded-Prefix=/lidarr"
+      - "traefik.http.routers.lidarr.middlewares=lidarr-headers,lidarr-stripprefix"
     restart: unless-stopped
 
 ############################
@@ -188,6 +236,18 @@ services:
       - ${DOCKER_CONFIG_DIR}/jellyseer:/app/config
     ports:
       - 5055:5055
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyseer.rule=Host(`${HOSTNAME}`) && PathPrefix(`/jellyseer`)"
+      - "traefik.http.routers.jellyseer.entrypoints=web"
+      - "traefik.http.services.jellyseer.loadbalancer.server.port=5055"
+      - "traefik.http.middlewares.jellyseer-stripprefix.stripprefix.prefixes=/jellyseer"
+      - "traefik.http.middlewares.jellyseer-headers.headers.customrequestheaders.X-Forwarded-Proto=http"
+      - "traefik.http.middlewares.jellyseer-headers.headers.customrequestheaders.X-Forwarded-Host=${HOSTNAME}"
+      - "traefik.http.middlewares.jellyseer-headers.headers.customrequestheaders.X-Forwarded-Prefix=/jellyseer"
+      - "traefik.http.routers.jellyseer.middlewares=jellyseer-headers,jellyseer-stripprefix"
     restart: unless-stopped
 
 ############################
